@@ -35,4 +35,3 @@ class MovieViewsT4Test(APITestCase):
 
         msg = "Verifique se a paginação está retornando apenas dois items de cada vez"
         self.assertEqual(expected_len, results_len)
-
