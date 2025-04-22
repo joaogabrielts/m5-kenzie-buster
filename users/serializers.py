@@ -27,3 +27,15 @@ class UserSerializer(serializers.ModelSerializer):
         if User.objects.filter(username=value).exists():
             raise serializers.ValidationError("username already taken.")
         return value
+
+    def update(self, instance, validated_data):
+        # Permitir atualização apenas do próprio usuário ou se for um employee
+        request_user = self.context['request'].user
+        if not request_user.is_employee and request_user != instance:
+            raise serializers.ValidationError("You do not have permission to update this user.")
+        
+        # Atualizar os campos normalmente
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
